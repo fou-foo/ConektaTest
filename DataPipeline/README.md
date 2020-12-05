@@ -21,7 +21,7 @@ Disclaimer: Las instrucciones de instalación son documentadas para un OS Ubuntu
 
 *Nota: En caso de trabajar con alta concurrencia ACID y si el modelo de datos no tiene cambios replicaría la DB y distribuiría la carga de peticiones con un balanceador y claro sincronizar las réplicas. En caso de alta concurrencia de peticiones de lectura evaluaría una herramienta que guarde en cache las solicitudes efectuadas.* 
 
-## Setup de la DB
+### Setup de la DB
 
 *Use el servicio Cloud SQL for PostgreSQL considerando un escenario de la vida real y me restan unos créditos gratis en GCP (no así en AWS).
 Además los datos de identificación están enmascarados y no hay regulaciones legales que me impidan alojar los datos fuera del territorio nacional.*
@@ -75,23 +75,39 @@ gcloud sql users set-password postgres --instance=conekta --password=conektafou
 
 *Nota: Como el dataset es pequeño lo trabajo en mi local, si estuviera trabajando con archivos de GB o más, subiría los archivos en paralelo a la nube y todo el código que Python de las siguientes secciones lo trabajaría en una instancia en la misma región geográfica en donde están los datos para reducir los tiempos de traslado de la data, que suelen ser los cuellos de botella.*
 
-
-
-
-
 # 1.2 Extracción 
 
+*Decidí utilizar el lenguaje Python para este task, por las siguientes razones:*
+1. *Es Open Source y tiene una amplia comunidad por lo que es muy conocido y es fácil compartir código desarrollado en él.*   
+2. *Es un estándar en el área de DS y DE que se integra con muchas otras herramientas como AirFlow, Spark, etc.*
+3. *El lenguaje está diseñado para ser fácil de entender y su uso se ha extendido a diversas áreas como front-end y back-end lo que facilita seguir mejores prácticas en el desarrollo de software y por ende productos de datos.* 
+4. *Aunque no es eficiente utilizando la RAM no tiene tanta área de oportunidad como R u otros.*  
+5. *El dataset es pequeño (de nuevo).*
+6. *Tiene un package especializado para interactuar con PostgreSQL.* 
+
+*Elegí extraer la información directamente del archivo csv, pues es un archivo pequeño.* 
+
+### Setup del entorno para programación 
+
+Opte por utilizar los Jupyter notebooks aprovechando que Ubuntu 20 incorpora Python 3, sin embargo requerí instalar algunas herramientas, packages y crear un environment virtual como buena práctica para que las instalaciones (y sus dependencias)  de este task no entren en conflicto con las de otros proyectos en la misma máquina. 
+ 
+```bash 
+sudo apt-get install python3-venv
+python3 -m venv conekta_test
+source conekta_test/bin/activate
+sudo apt install python3-pip
+pip3 install psycopg2-binary
 
 
 
+pip3 install notebook
+jupyter notebook 
+```
 
-instalar pip 
-instalar sqlalchemy 
-pip install psycopg2-binary
-pip install psycopg2
+Keys/./cloud_sql_proxy -instances=sandbox-289720:us-central1:conekta=tcp:5455 \
+-credential_file=/home/foo/Desktop/GitHub/ConektaTest/DataPipeline/Keys/sandbox-289720-ebae2a778afb.json & 
 
-./cloud_sql_proxy -instances=sandbox-289720:us-central1:conekta=tcp:5432 \
--credential_file=/home/foo/Desktop/GitHub/ConektaTest/DataPipeline/Keys/sandbox-289720-ebae2a778afb.json
+
 
 
 from sqlalchemy import create_engine
