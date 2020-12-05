@@ -73,6 +73,11 @@ gcloud sql users set-password postgres --instance=conekta --password=conektafou
 
     En GCP, se requiere crear una entidad (puede ser un usuario o grupo de usuarios o bien como en nuestro caso un solo servicio) a la que se le pueden asociar permisos y roles para el uso de los servicios cloud. Se llama `service account`, si bien se puede generar por medio de la SDK o el Shell la manera más sencilla es vía la consola web, como se documenta [aqui](https://cloud.google.com/sql/docs/postgres/sql-proxy#create-service-account), es importante que en la creación del service account `conektaclient` se asignen solo los permisos mencionados en el enlace anterior (*para mantener una política de permisos mínimos y suficientes*) y la obtención del archivo `sandbox-289720-ebae2a778afb.json` con las claves de autentificación del service account y guardamos el archivo el archivo en la carpeta `Keys`.
 
+*Nota: Como el dataset es pequeño lo trabajo en mi local, si estuviera trabajando con archivos de GB o más, subiría los archivos en paralelo a la nube y todo el código que Python de las siguientes secciones lo trabajaría en una instancia en la misma región geográfica en donde están los datos para reducir los tiempos de traslado de la data, que suelen ser los cuellos de botella.*
+
+
+
+
 
 # 1.2 Extracción 
 
