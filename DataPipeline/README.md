@@ -104,3 +104,28 @@ Keys/./cloud_sql_proxy -instances=sandbox-289720:us-central1:conekta=tcp:5432 \
 -credential_file=/home/foo/Desktop/GitHub/ConektaTest/DataPipeline/Keys/sandbox-289720-ebae2a778afb.json & # activacion del proxy  
 jupyter notebook  #actuivacion del notebook 
 ```
+
+*La extracción fue sencilla, los retos que encontré fueron las líneas en blanco las cuales puede omitir fácilmente desde la lectura y leer las fechas como strings para evitar que los valores se alterarán desde su lectura.*
+
+## 1.3 Transformación 
+
+*La transformación fue la parte más laboriosa y se encuentra comentada en el notebook, solo resaltare que procure no eliminar registros de las transacciones originales excepto 3 de ellos, debido a que contaban con montos excesivamente grandes y por la definición del schema propuesto asumí que se trataban de errores (además uno de ellos era mayor al PIB del país segun el INEGI para [2018](https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2019/pib_pconst/pib_pconst2019_02.pdf).*
+
+## 1.4 Dispersión de la información
+
+*Decidí construir una DB, `Conekta`, con el supuesto de que esta es la única base de datos de la empresa. Siguiendo este supuesto cree un schema `Transaccional` para separar de manera lógica los objetos que creare de los otros de la base de datos (en el supuesto de que existieran otros) para no interferir con las peticiones de otros usuarios o aplicaciones. De igual manera un schema permite tener mayor control sobre los accesos y permisos y manejarlos de una manera  más sencilla.*
+
+*Las tablas y vista requeridas son construidas dentro de este schema.* 
+
+*Las únicas diferencias entre el schema propuesto y el de las tablas que construí son las siguientes:*
+- *El campo `id` de ambas tablas es de longitud 40, debido a que el string en los datos originales es de esa longitud.*
+- *Cada id de cada llama `id`, como buena práctica, sin embargo en la tabla `Charge` el campo `company_id` es la columna con la que se establece la relación entre ambas tablas.* 
+
+*Comentarios adicionales:*
+- *Supongo que los ids son strings por el enmascaramiento, sino fuera un ejercicio buscaría que los ids fuesen numéricos, debido a que ordenar números es más rápido que ordenar letras y por ende los joins requieren de menos recursos computacionales.* 
+- *No indexe las tablas por sus ids porque supuse que constantemente se insertaran nuevos registros en ambas tablas esto lo deduje por el nombre de la columna ‘updated_at’ del schema propuesto. Sin embargo, como actualmente el almacenamiento es barato en comparación del cómputo sería preferible hacerlo sobre todo en la tabla ‘Charge` y cuidando el mantenimiento de los índices, ya que con las inserciones nuevas los índices pierden performance. 
+La inserción de registros la hice por lotes, para no saturar el RDBMS y bloquear las tablas.* 
+ 
+
+
+
