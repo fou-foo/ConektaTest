@@ -97,6 +97,9 @@ python3 -m venv conekta_test
 source conekta_test/bin/activate
 sudo apt install python3-pip
 pip3 install psycopg2-binary
+pip3 install numpy # solo por completes ya que es una dependencia de pandas
+pip3 install pandas
+
 
 
 
