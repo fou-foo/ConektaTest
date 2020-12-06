@@ -107,7 +107,7 @@ pip3 install notebook
 jupyter notebook 
 ```
 
-Keys/./cloud_sql_proxy -instances=sandbox-289720:us-central1:conekta=tcp:5455 \
+Keys/./cloud_sql_proxy -instances=sandbox-289720:us-central1:conekta=tcp:5432 \
 -credential_file=/home/foo/Desktop/GitHub/ConektaTest/DataPipeline/Keys/sandbox-289720-ebae2a778afb.json & 
 
 
