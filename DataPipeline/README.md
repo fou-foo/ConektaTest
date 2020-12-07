@@ -8,6 +8,26 @@ Por otro lado el  notebook, `DataPipeline.ipynb`, contiene el código que realiz
 
 Disclaimer: Las instrucciones de instalación son documentadas para un OS Ubuntu 20 en una arquitectura de 64 bits, cuando algún paso es dependiente del OS se proporcionan fuentes donde consultar la instalación para otros sistemas operativos.   
 
+En resumen,  para tener acceso a la DB y poder ejecutar el notebook en su ambiente local requiere realizar las siguientes instrucciones:
+
+Descargar el [Cloud SQL Proxy](https://cloud.google.com/sql/docs/postgres/sql-proxy#authentication-options) en la misma carpeta en donde se tengan las credenciales del service account (archivo .json) supongamos que es `Desktop`. Asumiendo que se tiene un ambiente Linux de 64 bits en la terminal se ejecutan los comandos:
+
+```bash 
+~/Desktop$ wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy # descarga del proxy
+~/Desktop$ chmod +x cloud_sql_proxy 
+~/Desktop$ ./cloud_sql_proxy -instances=sandbox-289720:us-central1:conekta=tcp:5432 \
+-credential_file=sandbox-289720-ebae2a778afb.json  # activacion del proxy
+```
+
+Ahora que su machina tiene acceso a la DB puede ejecutar el notebook, o bien realizar conecciones a la DB desde la terminal como por ejemplo con el siguiente comando (requiere un cliente postgresql): 
+```bash 
+~/Desktop$ sudo apt-get install postgresql-client
+~/Desktop$ psql "host=127.0.0.1 sslmode=disable user=postgres"
+```
+Y accede con el password `conektafou`. 
+
+
+
 ## 1.1 Carga de Información 
 
 *Elegí trabajar con el RDBMS PostgreSQL por las siguientes razones:*
